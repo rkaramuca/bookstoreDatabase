@@ -1,0 +1,11 @@
+od -xc > part1.answers:
+0000000    6f52    616e    646c    0a0a
+          R   o   n   a   l   d  \n  \n
+0000010
+
+Name in ASCII hex:
+R  o  n  a  l  d  \n \n
+52 6f 6e 61 6c 64 0a 0a
+
+pwd >> part1.answers:
+/home/karamuca_ra/classes/csc310/projects/prog1

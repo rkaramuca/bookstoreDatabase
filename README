@@ -1,0 +1,53 @@
+Project 1: Bookstore Database
+-----------------------------
+The goal of the project is to provide a solution for updating a binary database
+for a bookstore. The program allows for the user to update the price and stock
+of a specific ISBN book, as well as delete records or add new ones.
+
+For the implementation, I took in 3 files:
+    - Original binary data file
+        - current record of all books in the store
+    - Transaction list file
+        - what needs to be done to the database file records
+    - New output file
+        - what the new file, with updated data, should be called 
+The program does the necessary transactions, then outputs the new database,
+along with creating a file called ERRORS, which lists all errors encountered 
+when attempting to make changes to the database.
+
+To do this, I first check all file names to see if they were valid and unique.
+Next, I created a map of all ISBNs to their respecitive offsets in the 
+master file. I did this by making sure each offset was the size of the BookRec 
+data type multiplied by the current offset + 1 to avoid record collision/
+overlap. The map was to see what exactly would go into the final file. I then 
+went through through the transactions and saw what had to be done. Each
+transaction action (add, delete, update onhand, and update price) 
+is assigned a number using an enum {0, 1, 2, 3}. 
+
+I separated the argv command list and split it into the master file, temp file,
+and new file. The temp file was set to "copy.out" to not interfere with master.
+Add:
+    - If the record was already in the file, I wrote that error to ERRORS and
+      ignored the action. Otherwise, I wrote the new record to the temp file, as
+      well as adding the new ISBN and offset to the map.
+Delete:
+    - If the record wasn't in the file, I wrote the error to ERRORS and ignored 
+      the action. Otherwise, I erased the record from the map.
+Change Onhand:
+    - If the record wasn't in the file, I wrote the error to ERRORS and ignored
+      the action. Otherwise, I went to the offset in the file, based on the map 
+      value, and changed that record's onhand. If the new onhand was negative,
+      the onhand value became 0, as we cannot have negative books. I then
+      updated the record's byte offset, then wrote it to the temp out file.
+Change Price:
+    - If the record wasn't in the file, I wrote the error to Errors then ignored
+      the action. Otherwise, I went to the offset in the file, based on the map
+      value, and change that record's price. I then updated the record's byte
+      offset, then wrote it to the temp out file.
+
+After all transactions were done, I removed the temporary copy file, then 
+populated the final, updated file with the data from the temp out file, based 
+on the offsets from the map.
+
+Lastly, I printed the errors and data, in plaintext, from the new file, and 
+closed all open file streams.
